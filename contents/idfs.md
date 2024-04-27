@@ -64,7 +64,7 @@ It supports simple, human-friendly date-time formatting. The table below display
 | `oo`   | `±0700` | Timezone offset with leading zero without colon    |
 | `ooo`  | `±07:00`| Timezone offset with leading zero with colon       |
 
-#### The conventions followed by IDFS specifiers design
+### The conventions followed by IDFS specifiers design
 
 - When a `single character specifier` is used, it is without leading zero or padding. For example, `y`, `m`, `d`, `h`, `i`, `s` represent year, month, day, hour, minute, and second without leading zero or padding respectively.
 - When `two characters of same family (consicutively)` are used, they are padded with leading zeros. For example, `yy`, `mm`, `dd`, `hh`, `ii`, `ss` represent two-digit year, month, day, hour, minute, and second with leading zeros respectively.
