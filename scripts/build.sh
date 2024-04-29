@@ -1,22 +1,40 @@
 #!/bin/bash
 
+# Load variables from .env file
+if [ -f .env ]; then
+    source .env
+else
+    echo ".env file not found"
+    exit 1
+fi
+
 current_dir=$(pwd) # current working directory
-build_dir="$current_dir/build/"
-modules_dir="$current_dir/modules/"
+misc_dir="$current_dir/$MISC_DIR/"
+build_dir="$current_dir/$BUILD_DIR/"
+modules_dir="$current_dir/$MODULES_DIR/"
+
 temp_markdown="$build_dir/temp_combined.md"
-metadata="metadata.md"
-modules=("lims" "accounts" "membership")  # Define the order of modules explicitly
+metadata="$misc_dir/metadata.md"
+
+# Loop through the modules directory and add each module to the array
+modules=()
+for module in $(ls $modules_dir); do
+  modules+=($module)
+done
+
+# If the build directory does not exist, create it
+if [ ! -d "$build_dir" ]; then
+  mkdir $build_dir
+fi
 
 prepare_master_file() {
   # clear the temp file
   echo "" > $temp_markdown
 
-
   # Add metadata to the beginning of the file. Read from metadata.md
   if [ -f "$metadata" ]; then
     cat $metadata >> $temp_markdown
   fi
-
 
   # Loop through each module in the defined order
   for module in "${modules[@]}"; do
@@ -54,16 +72,15 @@ prepare_master_file() {
   done
 }
 
-
 generate_doc() {
   # Generate the filenames with full paths
-  output_doc="${build_dir}chemo-doc-$(date +'%Y-%m-%d').docx"
+  output_doc="${build_dir}/$OUTPUT_FILE_NAME.docx"
 
   # Generate the Word document with a TOC and metadata
   pandoc -s $temp_markdown -o $output_doc \
     --toc --toc-depth=2 \
     --from=markdown --to=docx \
-    --reference-doc=./template.dotx \
+    --reference-doc=$misc_dir/template.dotx \
     --lua-filter=./filters/add-page-breaks.lua \
     --lua-filter=./filters/add-cover-page.lua \
     --lua-filter=./filters/adjust-headings.lua \
@@ -82,7 +99,7 @@ convert_to_pdf() {
 
 prepare_master_file
 generate_doc
-convert_to_pdf
+# convert_to_pdf
 
 # References:
 # https://pandoc.org/demos.html
