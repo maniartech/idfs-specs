@@ -1,9 +1,7 @@
 
 ## Intuitive Date Format Specifiers (IDFS)
 
-We've developed the Intuitive Date Format Specifiers (IDFS) for `gotime`. `IDFS is a cAsE-insensitive format`, eliminating ambiguity often associated with dd-mm-yyyy formats. This intuitive specifiers makes date and time formatting simple and hackable. entry by removing the need to remember upper and lower case attributes, a common issue with other similar formats. For example, %Y represents a four-digit year, while %y denotes a two-digit year in strftime. In contrast, IDFS intuitively uses yyyy for a four-digit year and yy for a two-digit year. Typing dates is also more straightforward with IDFS, as the format yyyy-mm-dd is easier to remember and input compared to the less intuitive 2006-01-02.
-
-It supports simple, human-friendly date-time formatting. The table below displays the supported formats. Internally, `gotime` utilizes time.Time.Format() and converts human-friendly formats into the time.Time format. For instance, it transforms yyyy-mm-dd into 2006-01-02 before using time.Time.Format() to format the date.
+The following table presents the Intuitive Date Format Specifiers (IDFS) for date and time formatting. The IDFS format is case-insensitive and designed to simplify the process of memorization and input. The IDFS format encompasses a wide range of date and time formats, including two-digit and four-digit years, month and day with or without leading zeros, ordinal formats, abbreviated and full month names, 12-hour and 24-hour formats, AM/PM indicators, microseconds, and timezone abbreviations. Additionally, IDFS supports timezone offsets with or without leading zeros and colons.
 
 ### Date Formats
 
@@ -11,24 +9,24 @@ It supports simple, human-friendly date-time formatting. The table below display
 | ------ | -------- | --------------------------------------------- |
 | `y`    | `6`      | Year without century with leading zero        |
 | `yy`   | `06`     | Two-digit year with leading zero              |
-| `yt`   | `6th`    | Year in ordinal format                        |
 | `yb`   | ` 6`     | Year in blank-padded two digits               |
+| `yt`   | `6th`    | Year in ordinal format                        |
 | `yyyy` | `2006`   | Four-digit year                               |
 | `m`    | `1`      | Month without leading zero                    |
 | `mm`   | `01`     | Month in two digits with leading zero         |
-| `mt`   | `1st`    | Month in ordinal format (not for parsing)     |
 | `mb`   | ` 1`     | Month in blank-padded two digits              |
+| `mt`   | `1st`    | Month in ordinal format (not for parsing)     |
 | `mmm`  | `Jan`    | Month in short name                           |
 | `mmmm` | `January`| Month in full name                            |
 | `w`    | `1`      | Week of the year without leading zero         |
 | `ww`   | `01`     | Week of the year with leading zero            |
-| `wt`   | `1st`    | Week of the year in ordinal format            |
 | `wb`   | ` 1`     | Week of the year in blank-padded two digits   |
+| `wt`   | `1st`    | Week of the year in ordinal format            |
 | `www`  | `Mon`    | Three-letter weekday name                     |
 | `wwww` | `Monday` | Full weekday name                             |
 | `d`    | `2`      | Day without leading zero                      |
 | `dd`   | `02`     | Day in two digits with leading zero           |
-| `db`   | `2`      | Day in blank-padded two digits                |
+| `db`   | ` 2`      | Day in blank-padded two digits               |
 | `dt`   | `2nd`    | Day in ordinal format (not for parsing)       |
 | `ddd`  | `002`    | Zero padded day of year                       |
 
