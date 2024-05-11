@@ -5,7 +5,8 @@ $word.Visible = $False
 # Write-Host "Opening document: $($args[0])"
 
 # Construct the full path for the Word document
-$wordDocumentPath = Join-Path -Path (Get-Location).Path -ChildPath $args[0]
+# $wordDocumentPath = Join-Path -Path (Get-Location).Path -ChildPath $args[0]
+$wordDocumentPath = $args[0]
 
 if (Test-Path $wordDocumentPath) {
     # print the path of the word document
