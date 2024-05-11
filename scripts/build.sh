@@ -29,7 +29,7 @@ fi
 
 prepare_master_file() {
   # clear the temp file
-  echo "" > $temp_markdown
+  truncate -s 0 $temp_markdown
 
   # Add metadata to the beginning of the file. Read from metadata.md
   if [ -f "$metadata" ]; then
@@ -45,36 +45,36 @@ prepare_master_file() {
     if [ -d "$module_dir" ]; then
       echo "Processing $module"
 
-      # Optional: Add a title for each module as a new chapter or section
-      # echo -e "# $module\n" >> $temp_markdown
+      # Before processing each module, add a page break
+      echo -e "\n<div style='page-break-after: always;'></div>\n" >> $temp_markdown
 
       # Check for an intro file and append if exists
       intro="$module_dir/0-intro.md"
       if [ -f "$intro" ]; then
-        cat "$intro" >> $temp_markdown
+        sed '/./,$!d' "$intro" | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba' >> $temp_markdown
       fi
 
       # Append each chapter, sorted numerically
       for chapter in $(ls $module_dir/*.md | sort -V); do
         if [ "$chapter" != "$intro" ]; then
           echo "Adding $chapter"
-          # Append a blank line before each chapter
-          echo -e "\n" >> $temp_markdown
+
+          echo "" >> $temp_markdown
 
           # Append the chapter content
-          cat "$chapter" >> $temp_markdown
+          sed '/./,$!d' "$chapter" | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba' >> $temp_markdown
         fi
       done
 
       # Add a page break after each module
-      echo -e "\n\\newpage\n" >> $temp_markdown
+      # echo -e "\n<div style='page-break-after: always;'></div>\n" >> $temp_markdown
     fi
   done
 }
 
 generate_doc() {
   # Generate the filenames with full paths
-  output_doc="${build_dir}/$OUTPUT_FILE_NAME.docx"
+  output_doc="${build_dir}$OUTPUT_FILE_NAME.docx"
 
   # Generate the Word document with a TOC and metadata
   pandoc -s $temp_markdown -o $output_doc \
@@ -82,7 +82,6 @@ generate_doc() {
     --from=markdown --to=docx \
     --reference-doc=$misc_dir/template.dotx \
     --lua-filter=./filters/add-page-breaks.lua \
-    --lua-filter=./filters/add-cover-page.lua \
     --lua-filter=./filters/adjust-headings.lua \
     --verbose
 
@@ -90,16 +89,15 @@ generate_doc() {
 }
 
 convert_to_pdf() {
-  ps_script=".\\generate-pdf.ps1"
-  doc="chemo-doc-$(date +'%Y-%m-%d').docx"
-  doc_path=".\\build\\$doc"
+  ps_script=".\\scripts\\generate-pdf.ps1"
+  output_doc="${build_dir}$OUTPUT_FILE_NAME.docx"
 
-  powershell.exe -ExecutionPolicy Bypass -File $ps_script "$doc_path"
+  powershell.exe -ExecutionPolicy Bypass -File $ps_script "$output_doc"
 }
 
 prepare_master_file
 generate_doc
-# convert_to_pdf
+convert_to_pdf
 
 # References:
 # https://pandoc.org/demos.html
