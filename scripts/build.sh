@@ -95,9 +95,24 @@ convert_to_pdf() {
   powershell.exe -ExecutionPolicy Bypass -File $ps_script "$output_doc"
 }
 
+update_build_date() {
+  # Get the current date and time
+  current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
+
+  # Replace the build_date line in the metadata
+  sed -i "s/created:.*/created: $current_datetime/" $metadata
+}
+
+update_readme() {
+  # Copies the temp_markdown file to the README.md file
+  cp $temp_markdown $current_dir/README.md
+}
+
+update_build_date
 prepare_master_file
 generate_doc
 convert_to_pdf
+update_readme
 
 # References:
 # https://pandoc.org/demos.html
